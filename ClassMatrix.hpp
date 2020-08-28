@@ -104,6 +104,12 @@ namespace matrix{
          */
         Matrix operator*(const double scalar) const;
         
+        /**
+         * @brief The function return a Matrix From File 
+         * 
+         * @param fileName - name of file
+         * @return Matrix - matrix to return from file
+         */
         static Matrix getMatrixFromFile(std::string fileName);
 
         /**
