@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tomer/Advanced Programmin 1/Ex3/ErrorCode.h
+stdbool.h
+-
+stdint.h
+-
+
+/home/tomer/Advanced Programmin 1/Ex3/MatrixExceptions.cpp
+MatrixExceptions.hpp
+/home/tomer/Advanced Programmin 1/Ex3/MatrixExceptions.hpp
+ErrorCode.h
+/home/tomer/Advanced Programmin 1/Ex3/ErrorCode.h
+iostream
+-
+
+/home/tomer/Advanced Programmin 1/Ex3/MatrixExceptions.hpp
+ErrorCode.h
+/home/tomer/Advanced Programmin 1/Ex3/ErrorCode.h
+

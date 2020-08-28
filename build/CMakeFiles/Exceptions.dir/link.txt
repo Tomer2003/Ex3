@@ -1,0 +1,2 @@
+/bin/ar qc libExceptions.a  CMakeFiles/Exceptions.dir/MatrixExceptions.cpp.o
+/bin/ranlib libExceptions.a
