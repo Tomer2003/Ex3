@@ -96,7 +96,7 @@ namespace CacheManager{
                 m_cache.erase(m_cache.begin()->first);
             }
             m_cache.insert({(--m_cache.end())->first + 1, operation.getOutPutFile() + " " +  operation.getHash()});
-            outFile << getDataOfOperationToFile(operation);
+            outFile << operation.getDataOfOperationToFile();
             outFile.close();
         }
     }
