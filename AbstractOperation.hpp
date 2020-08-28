@@ -26,7 +26,7 @@ namespace AbstractOperation{
              * @return true - parameters are appopriate
              * @return false - parameters are not appopriate
              */
-            virtual bool checkParameters() const = 0;
+            virtual void checkParameters() const = 0;
 
             /**
              * @brief The function do the operation of the user
@@ -34,5 +34,10 @@ namespace AbstractOperation{
              */
             virtual void doOperation() const = 0;
 
+            const std::string getOperation() const;
+
+            const std::string getInputFiles() const;
+
+            const std::string getOutputFile() const;
     };
 }
