@@ -1,50 +1,38 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(ex2 VERSION 0.1.0)
+project(tester VERSION 0.1.0)
 
 include(CTest)
+set(C_STANDARD C99)
 add_compile_options(-Wall -Wextra -pedantic -Werror)
 enable_testing()
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_library(
-    BitMapFactory
-    BitMapFactory.cpp
-    BitMapFactory.hpp
-)
-
-add_library(
-    BitMap
-    BitMap.cpp
-    BitMap.hpp
-)
-
-add_library(
-    Headers
-    Headers.cpp
-    Headers.hpp
-)
-
-add_library(
-    bmp_tester
-    bmp_tester.cpp
-    bmp_tester.hpp
+    ClassMatrix
+    ClassMatrix.cpp
+    ClassMatrix.hpp
 )
 
 add_library(
     Exceptions
-    Exceptions.cpp
-    Exceptions.hpp
+    MatrixExceptions.cpp
+    MatrixExceptions.hpp
 )
 
-add_library(
-    BMPFunctions
-    BitMapHelpFunctions.cpp
-    BitMapHelpFunctions.hpp
-)
 
-add_executable(ex2 main.cpp)
 
-target_link_libraries(ex2 bmp_tester BitMapFactory BitMap Headers Exceptions BMPFunctions)
+# Add the libmatrix file to the include path - so that
+#   we can include it as without explicitly specifying 
+#   the files directory.
+include_directories(${CMAKE_SOURCE_DIR}/matrix)
+# Link directories - tells the linker to look for .so files
+#   in these directories. We want libmatrix.so which is under 
+#the matrix directory. Note that a full path is required.
+link_directories(${CMAKE_SOURCE_DIR}/matrix)
+add_executable(tester main.cpp MatrixExceptions.cpp ClassMatrix.cpp)
+# Links out executable with matrix. ld (the linker) will automatically
+#   add the 'lib' prefix and 'so' suffix, which will result in libmatrix.so
+target_link_libraries(tester matrix Exceptions ClassMatrix)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

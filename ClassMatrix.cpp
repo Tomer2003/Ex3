@@ -4,6 +4,10 @@ extern "C" {
 #include "ClassMatrix.hpp"
 #include "MatrixExceptions.hpp"
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#include <sstream>
+#include <fstream>
 
 namespace matrix{
     Matrix::Matrix(const uint32_t height, const uint32_t width) :m_width(width), m_height(height){
@@ -82,6 +86,38 @@ namespace matrix{
         Matrix result(*this);
         Exceptions::throwAppopriateErrorIfHas(matrix_multiplyWithScalar(result.m_pMatrix, scalar));
         return result;
+    }
+
+    Matrix Matrix::getMatrixFromFile(std::string fileName){
+        std::ifstream inFile(fileName, std::ios::in);
+        if(!inFile){
+            //throw exception
+        }
+        auto content = std::string{std::istreambuf_iterator<char>{inFile},
+                                std::istreambuf_iterator<char>{}};
+        
+        content.erase(std::remove(content.begin(), content.end(), ' '), content.end());
+        content.erase(std::remove(content.begin(), content.end(), '\t'), content.end());
+        content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
+        auto matrixWidth = std::count(content.begin(), content.begin() + content.find("\n"), ',') + 1;
+
+        std::replace(content.begin(), content.end(), '\n', ',');
+        std::replace(content.begin(), content.end(), ',', ' ');
+        std::vector<unsigned int> valuesArr;
+        std::stringstream stringStreamContent(content);
+        unsigned int temp;
+        while (stringStreamContent >> temp){
+            valuesArr.push_back(temp);
+        }
+
+        auto matrixHeight = valuesArr.size() / matrixWidth;
+        matrix::Matrix matrix(matrixHeight, matrixWidth);
+        for(unsigned int row = 0; row < matrixHeight; ++row){
+            for(unsigned int col = 0; col < matrixWidth; ++col){
+                matrix.matrixSetValue(row, col, valuesArr[row * matrixWidth + col]);
+            }
+        }
+        return matrix;
     }
 
     Matrix::~Matrix(){

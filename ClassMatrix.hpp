@@ -4,7 +4,7 @@ extern "C" {
 #include "Matrix.h"
 }
 #include <stdint.h>
-
+#include <string>
 
 namespace matrix{
 
@@ -103,6 +103,8 @@ namespace matrix{
          * @return Matrix - matrix of the result.
          */
         Matrix operator*(const double scalar) const;
+        
+        static Matrix getMatrixFromFile(std::string fileName);
 
         /**
          * @brief Destroy the Matrix object
