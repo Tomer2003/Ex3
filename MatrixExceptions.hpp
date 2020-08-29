@@ -1,6 +1,6 @@
 #pragma once
 extern "C" {
-#include "ErrorCode.h"
+#include "matrix/ErrorCode.h"
 }
 namespace Exceptions {
 

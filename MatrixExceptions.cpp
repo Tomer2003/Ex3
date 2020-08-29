@@ -1,7 +1,7 @@
 
 #include "MatrixExceptions.hpp"
 extern "C" {
-#include "ErrorCode.h"
+#include "matrix/ErrorCode.h"
 }
 #include <iostream>
 
