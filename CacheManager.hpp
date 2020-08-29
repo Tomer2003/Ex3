@@ -37,7 +37,7 @@ namespace CacheManager{
          * @param operation - operation to check if exist in the cache.
          * @return int - return -1 if does not exist and return the key if exist.
          */
-        int searchCache(const AbstractOperation::AbstractOperation& operation) const;
+        unsigned int searchCache(const AbstractOperation::AbstractOperation& operation) const;
 
         /**
          * @brief The function set data to map from cache file.
@@ -50,5 +50,13 @@ namespace CacheManager{
          * 
          */
         void setDataToFileFromMap();
+
+        /**
+         * @brief The function return outputfile of key
+         * 
+         * @param key - key to get output file
+         * @return std::string - output file
+         */
+        const std::string getOutPutFileOfKey(unsigned int key);
     }; 
 }

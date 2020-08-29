@@ -1,5 +1,9 @@
+#include "ClassMatrix.hpp"
 #include "Operations.hpp"
-
+#include "CacheManager.hpp"
+#include <fstream>
+#include <iostream>
+#define OPERATION_NOT_FOUND -1
 namespace Operation{
   
     MatrixOperation::MatrixOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, const CacheManager::CacheManager& cacheManager)
@@ -24,7 +28,51 @@ namespace Operation{
         return hashOfOperation;
     }
 
-    void MatrixOperation::doOperation() const{
-        
+
+    const std::string MatrixOperation::getStringOfTheResultOperation() const{
+        matrix::Matrix* result;
+        matrix::Matrix firstMatrix = matrix::Matrix::getMatrixFromFile(m_firstInPutFile);
+        matrix::Matrix secondMatrix = matrix::Matrix::getMatrixFromFile(m_secondInPutFile);
+        if(getOperation() == "add"){
+            *result = firstMatrix + secondMatrix;
+        }
+        else{
+            *result = firstMatrix * secondMatrix;
+        }
+        std::string matrixStr = result->getStringOfMatrix();
+        delete result;
+        return matrixStr;
+    }
+
+    void MatrixOperation::writeToOutPutFileTheResultOperation() const{
+        std::ofstream outFile(getOutPutFile(), std::ios::out);
+        if(!outFile.is_open()){
+            outFile.close();
+            //throw exception!
+        }
+        outFile << getStringOfTheResultOperation();
+        outFile.close();
+    }
+
+
+    void MatrixOperation::doOperation(){
+        auto keyOfOperation = getCacheManager().searchCache(*this);
+        //print the reult operation
+        if(getOutPutFile() == "stdout"){
+            //operation found in cache
+            if(keyOfOperation != OPERATION_NOT_FOUND){
+                std::string outPutFileOperation = getCacheManager().getOutPutFileOfKey(keyOfOperation);
+                matrix::Matrix outPutFileMatrix = matrix::Matrix::getMatrixFromFile(outPutFileOperation);
+                outPutFileMatrix.printMatrix();
+            }
+            //operation not found in cache
+            else{
+                std::cout << getStringOfTheResultOperation();
+            }
+        }
+        //save result in cache
+        else{
+            getCacheManager().addOperation(*this);
+        }       
     }
 }

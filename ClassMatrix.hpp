@@ -113,6 +113,19 @@ namespace matrix{
         static Matrix getMatrixFromFile(std::string fileName);
 
         /**
+         * @brief The function print matrix to cout
+         * 
+         */
+        void printMatrix() const;
+
+        /**
+         * @brief The function return string of matrix.
+         * 
+         * @return const std::string - string of matrix
+         */
+        const std::string getStringOfMatrix() const;
+
+        /**
          * @brief Destroy the Matrix object
          * 
          */

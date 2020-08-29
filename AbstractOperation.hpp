@@ -34,7 +34,7 @@ namespace AbstractOperation{
              * @brief The function do the operation of the user
              * 
              */
-            virtual void doOperation() const = 0;
+            virtual void doOperation() = 0;
 
             /**
              * @brief The functoin return hash of operation
@@ -42,6 +42,12 @@ namespace AbstractOperation{
              * @return const std::string 
              */
             const virtual std::string getHash() const = 0;
+
+            /**
+             * @brief The function write to output file the result of operation
+             * 
+             */
+            virtual void writeToOutPutFileTheResultOperation() const = 0; 
 
             /**
              * @brief The function return operation string
@@ -63,5 +69,12 @@ namespace AbstractOperation{
              * @return const std::string - output files to return 
              */
             const std::string getOutPutFile() const;
+
+            /**
+             * @brief The function return cache manager object
+             * 
+             * @return CacheManager::CacheManager& - cache manager object 
+             */
+            CacheManager::CacheManager& getCacheManager();
     };
 }

@@ -4,8 +4,7 @@
 #include <string>
 #include <iostream>
 #include <iterator>
-#define NUMBER_OF_BLANCKED_CHARACTERS 5
-#define VALUE_NOT_FOUND -1
+#define OPERATION_NOT_FOUND -1
 namespace CacheManager{
     CacheManager::CacheManager(const unsigned int cacheSize)
     : m_cacheFile("cacheFile.txt"), m_cacheSize(cacheSize){
@@ -29,6 +28,10 @@ namespace CacheManager{
         inFile.close();
     }
 
+    const std::string CacheManager::getOutPutFileOfKey(unsigned int key){
+        return m_cache[key].substr( m_cache[key].find(' ') + 1, m_cache[key].size() -  m_cache[key].find(' ') - 1);
+    }
+
 
     void CacheManager::setDataToFileFromMap(){
         std::ofstream outFile(m_cacheFile, std::ios::out | std::ios::trunc);
@@ -48,10 +51,10 @@ namespace CacheManager{
     }
 
 
-    int CacheManager::searchCache(const AbstractOperation::AbstractOperation& operation) const{
+    unsigned int CacheManager::searchCache(const AbstractOperation::AbstractOperation& operation) const{
         bool valueFound = false;
-        int keyOfValue = VALUE_NOT_FOUND;
-        std::string valueToSearch = operation.getOutPutFile() + " " +  operation.getHash();
+        unsigned int keyOfValue = OPERATION_NOT_FOUND;
+        std::string valueToSearch = operation.getHash();
         for (auto const& pair : m_cache){
             auto splitIndex = pair.second.find(' ');
             if(pair.second.substr(splitIndex + 1, pair.second.size() - splitIndex - 1) == valueToSearch){
@@ -70,40 +73,41 @@ namespace CacheManager{
 
 
     void CacheManager::addOperation(const AbstractOperation::AbstractOperation& operation){
-        std::ofstream outFile(operation.getOutPutFile(), std::ios::out | std::ios::trunc);
-        if(!outFile.is_open()){
-            outFile.close();
-            //trow exception!
-        }
-        auto keyOfValue = searchCache(operation);
-         //the value in cache
-        if(keyOfValue != VALUE_NOT_FOUND){
-            std::string dataFileName = m_cache[keyOfValue].substr(0, m_cache[keyOfValue].find(' '));
-            std::ifstream inFile(dataFileName, std::ios::in);
-              if(!inFile.is_open()){
-                inFile.close();
+            std::ofstream outFile(operation.getOutPutFile(), std::ios::out | std::ios::trunc);
+            if(!outFile.is_open()){
+                outFile.close();
                 //trow exception!
             }
-            auto content = std::string{std::istreambuf_iterator<char>{inFile},
-                             std::istreambuf_iterator<char>{}};
-            inFile.close();
-            outFile << content;
-            outFile.close();
+            auto keyOfValue = searchCache(operation);
+            //the value in cache
+            if(keyOfValue != OPERATION_NOT_FOUND){
+                std::string dataFileName = m_cache[keyOfValue].substr(0, m_cache[keyOfValue].find(' '));
+                std::ifstream inFile(dataFileName, std::ios::in);
+                if(!inFile.is_open()){
+                    inFile.close();
+                    //trow exception!
+                }
+                auto content = std::string{std::istreambuf_iterator<char>{inFile},
+                                std::istreambuf_iterator<char>{}};
+                inFile.close();
+                outFile << content;
+                outFile.close();
 
-            //change order of cache
-            auto valueOfKey = m_cache[keyOfValue];
-            m_cache.erase(keyOfValue);
-            m_cache.insert({(--m_cache.end())->first + 1, valueOfKey});
-        }
-        //the value not in cache
-        else{
-            //over values(need to remove a value)
-            if(m_cache.size() + 1 > m_cacheSize){
-                m_cache.erase(m_cache.begin()->first);
+                //change order of cache
+                auto valueOfKey = m_cache[keyOfValue];
+                m_cache.erase(keyOfValue);
+                m_cache.insert({(--m_cache.end())->first + 1, valueOfKey});
             }
-            m_cache.insert({(--m_cache.end())->first + 1, operation.getOutPutFile() + " " +  operation.getHash()});
-            outFile << readFileContent(operation.getOutPutFile());
-            outFile.close();
-        }
+            //the value not in cache
+            else{
+                //over values(need to remove a value)
+                if(m_cache.size() + 1 > m_cacheSize){
+                    m_cache.erase(m_cache.begin()->first);
+                }
+
+                m_cache.insert({(--m_cache.end())->first + 1, operation.getOutPutFile() + " " +  operation.getHash()});
+                operation.writeToOutPutFileTheResultOperation();
+                outFile.close();
+            }
     }
 }

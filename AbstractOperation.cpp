@@ -16,4 +16,8 @@ namespace AbstractOperation{
     const std::string AbstractOperation::getOutPutFile() const{
         return m_outPutFile;
     }
+
+    CacheManager::CacheManager& AbstractOperation::getCacheManager(){
+        return m_cacheManager;
+    }
 }

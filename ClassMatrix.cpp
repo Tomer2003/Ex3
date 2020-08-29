@@ -120,6 +120,26 @@ namespace matrix{
         return matrix;
     }
 
+    void Matrix::printMatrix() const{
+        for(unsigned int row = 0; row < m_height; ++row){
+            for(unsigned int column = 0; column < m_width; ++column){
+                std::cout << this->operator()(row, column) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    const std::string Matrix::getStringOfMatrix() const{
+        std::string matrixStr = "";
+         for(unsigned int row = 0; row < m_height; ++row){
+            for(unsigned int column = 0; column < m_width; ++column){
+                matrixStr += std::to_string(this->operator()(row, column)) + " ";
+            }
+            matrixStr += '\n';
+        }
+        return matrixStr;
+    }
+
     Matrix::~Matrix(){
         matrix_destroy(this->m_pMatrix);
     }

@@ -38,7 +38,20 @@ namespace Operation{
          * @brief The function do the operation of the user
          * 
          */
-        virtual void doOperation() const;
+        virtual void doOperation();
+
+        /**
+         * @brief The function write to output file the result of operation
+         * 
+         */
+        virtual void writeToOutPutFileTheResultOperation() const; 
+
+        /**
+         * @brief The function return the string result of operation
+         * 
+         * @return const std::string - string result of operation
+         */
+        const std::string getStringOfTheResultOperation() const;
     };
 
 
