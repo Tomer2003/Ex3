@@ -1,23 +1,29 @@
 #pragma once
-#include "AbstractOperation.hpp"
 #include <string>
 #include <map> 
-namespace CacheManager{
 
-    //immutable CacheManager class
+
+namespace CacheManager{
     class CacheManager{
     private:
         const std::string m_cacheFile;
         const unsigned int m_cacheSize;
-        std::map<unsigned int, std::string> m_cache;
     public:
+        std::map<unsigned int, std::string> m_cache;
         /**
-         * @brief Construct a new Cache Manager object.
+         * @brief Construct of a new Cache Manager object
          * 
-         * @param cacheSize - cache size.
+         * @param cacheSize - size of cache
          */
         CacheManager(const unsigned int cacheSize);
-        
+
+        /**
+         * @brief Copy Constructor of a new Cache Manager object
+         * 
+         * @param cacheManager - cacheManager to copy
+         */
+       // CacheManager(const CacheManager& cacheManager);
+
         /**
          * @brief The function clear all pairs in the cache.
          * 
@@ -29,7 +35,7 @@ namespace CacheManager{
          * 
          * @param operation - operation to add to cache.
          */
-        void addOperation(const AbstractOperation::AbstractOperation& operation);
+        void addOperation( std::string hash, std::string outPutFile);
 
         /**
          * @brief The function check if the operation exist in the cache.
@@ -37,7 +43,7 @@ namespace CacheManager{
          * @param operation - operation to check if exist in the cache.
          * @return int - return -1 if does not exist and return the key if exist.
          */
-        unsigned int searchCache(const AbstractOperation::AbstractOperation& operation) const;
+        int searchCache(std::string hash, bool printResult);
 
         /**
          * @brief The function set data to map from cache file.
@@ -59,4 +65,5 @@ namespace CacheManager{
          */
         const std::string getOutPutFileOfKey(unsigned int key);
     }; 
-}
+} 
+

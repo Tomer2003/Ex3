@@ -33,7 +33,7 @@ namespace matrix{
 
     Matrix& Matrix::operator=(Matrix&& other){
          if(this != &other){
-            matrix_destroy(this->m_pMatrix);
+            matrix_destroy(this->m_pMatrix);  
             this->m_pMatrix = other.m_pMatrix;
             this->m_height = other.m_height;
             this->m_width = other.m_width;
@@ -133,7 +133,10 @@ namespace matrix{
         std::string matrixStr = "";
          for(unsigned int row = 0; row < m_height; ++row){
             for(unsigned int column = 0; column < m_width; ++column){
-                matrixStr += std::to_string(this->operator()(row, column)) + " ";
+                matrixStr += std::to_string((int)(this->operator()(row, column)));
+                if(column != m_width - 1){
+                    matrixStr += ",";
+                }
             }
             matrixStr += '\n';
         }

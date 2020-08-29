@@ -2,16 +2,19 @@
 #include "CacheManager.hpp"
 #include <string>
 
+
+
+
 namespace AbstractOperation{
     class AbstractOperation{
     private:
         std::string m_operation;
         std::string m_inPutFiles;
         std::string m_outPutFile; 
-        CacheManager::CacheManager m_cacheManager;
 
 
     public:
+        CacheManager::CacheManager& m_cacheManager;
             /**
              * @brief Construct a new Abstract Operation object
              * 
@@ -20,7 +23,7 @@ namespace AbstractOperation{
              * @param m_outputFile - output file 
              * @param m_cacheManager - cache manager object
              */
-            AbstractOperation(const std::string& operation, const std::string& inPutFiles, const std::string& outPutFile, const CacheManager::CacheManager& cacheManager);
+            AbstractOperation(const std::string& operation, const std::string& inPutFiles, const std::string& outPutFile, CacheManager::CacheManager& cacheManager);
 
             /**
              * @brief The function check if the parameters are appopriate
@@ -76,5 +79,7 @@ namespace AbstractOperation{
              * @return CacheManager::CacheManager& - cache manager object 
              */
             CacheManager::CacheManager& getCacheManager();
+
+            
     };
 }

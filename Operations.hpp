@@ -17,7 +17,7 @@ namespace Operation{
         * @param m_outputFile - output file 
         * @param m_cacheManager - cache manager object
          */
-        MatrixOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, const CacheManager::CacheManager& cacheManager);
+        MatrixOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager);
 
         /**
         * @brief The function check if the parameters are appopriate
