@@ -1,4 +1,5 @@
 #include "CacheManager.hpp"
+#include "file_reading.hpp"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -47,7 +48,7 @@ namespace CacheManager{
     }
 
 
-    int CacheManager::searchCache(const AbstractOperation& operation) const{
+    int CacheManager::searchCache(const AbstractOperation::AbstractOperation& operation) const{
         bool valueFound = false;
         int keyOfValue = VALUE_NOT_FOUND;
         std::string valueToSearch = operation.getOutPutFile() + " " +  operation.getHash();
@@ -68,7 +69,7 @@ namespace CacheManager{
     } 
 
 
-    void CacheManager::addOperation(const AbstractOperation& operation){
+    void CacheManager::addOperation(const AbstractOperation::AbstractOperation& operation){
         std::ofstream outFile(operation.getOutPutFile(), std::ios::out | std::ios::trunc);
         if(!outFile.is_open()){
             outFile.close();
@@ -88,6 +89,11 @@ namespace CacheManager{
             inFile.close();
             outFile << content;
             outFile.close();
+
+            //change order of cache
+            auto valueOfKey = m_cache[keyOfValue];
+            m_cache.erase(keyOfValue);
+            m_cache.insert({(--m_cache.end())->first + 1, valueOfKey});
         }
         //the value not in cache
         else{
@@ -96,7 +102,7 @@ namespace CacheManager{
                 m_cache.erase(m_cache.begin()->first);
             }
             m_cache.insert({(--m_cache.end())->first + 1, operation.getOutPutFile() + " " +  operation.getHash()});
-            outFile << operation.getDataOfOperationToFile();
+            outFile << readFileContent(operation.getOutPutFile());
             outFile.close();
         }
     }

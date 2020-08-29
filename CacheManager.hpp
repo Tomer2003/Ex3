@@ -1,4 +1,5 @@
 #pragma once
+#include "AbstractOperation.hpp"
 #include <string>
 #include <map> 
 namespace CacheManager{
@@ -28,7 +29,7 @@ namespace CacheManager{
          * 
          * @param operation - operation to add to cache.
          */
-        void addOperation(const AbstractOperation& operation);
+        void addOperation(const AbstractOperation::AbstractOperation& operation);
 
         /**
          * @brief The function check if the operation exist in the cache.
@@ -36,7 +37,7 @@ namespace CacheManager{
          * @param operation - operation to check if exist in the cache.
          * @return int - return -1 if does not exist and return the key if exist.
          */
-        int searchCache(const AbstractOperation& operation) const;
+        int searchCache(const AbstractOperation::AbstractOperation& operation) const;
 
         /**
          * @brief The function set data to map from cache file.
