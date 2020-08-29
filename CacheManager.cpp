@@ -115,7 +115,7 @@ namespace CacheManager{
             //the value not in cache
             else{
                 //over values(need to remove a value)
-                if(m_cache.size() > m_cacheSize + 1){
+                if(m_cache.size() > m_cacheSize - 1){
                     m_cache.erase(m_cache.begin()->first);
                 }
 
