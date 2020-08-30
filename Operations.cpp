@@ -99,7 +99,7 @@ namespace Operation{
 
     const std::string ImageOperation::getHash() const{
         std::hash<std::string> stringHashFunction;
-        std::string hashOfOperation = std::to_string(stringHashFunction(readFileContent(getInPutFiles())));
+        std::string hashOfOperation = std::to_string(stringHashFunction(readFileContent(getInPutFiles()) + getOperation()));
         return hashOfOperation;
     }
 
