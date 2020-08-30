@@ -2,9 +2,12 @@
 #include "Operations.hpp"
 #include "CacheManager.hpp"
 #include "file_reading.hpp"
+#include "bmp/bmp_tester.hpp"
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 #define OPERATION_NOT_FOUND -1
+
 namespace Operation{
   
     MatrixOperation::MatrixOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager)
@@ -75,8 +78,45 @@ namespace Operation{
         }
         //save result in cache
         else{
-            getCacheManager().addOperation(getHash(), getOutPutFile());
-            writeToOutPutFileTheResultOperation();
+            auto operationAlreadyInCache = getCacheManager().addOperation(getHash(), getOutPutFile());
+             if(!operationAlreadyInCache){
+                writeToOutPutFileTheResultOperation();
+            }
         }       
+    }
+
+    ImageOperation::ImageOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager)
+    : AbstractOperation::AbstractOperation(operation, inputFiles, outputFile, cacheManager){
+        checkParameters();
+    };
+
+
+    void ImageOperation::checkParameters() const{
+        if(getOperation() != "convert" && getOperation() != "rotate"){
+            //throw exception false operation name
+        }
+    }
+
+    const std::string ImageOperation::getHash() const{
+        std::hash<std::string> stringHashFunction;
+        std::string hashOfOperation = std::to_string(stringHashFunction(readFileContent(getInPutFiles())));
+        return hashOfOperation;
+    }
+
+    void ImageOperation::writeToOutPutFileTheResultOperation() const{
+        if(getOperation() == "convert"){
+            bmpOperations::convert_to_grayscale(getInPutFiles(), getOutPutFile());
+        }
+        else{
+            bmpOperations::rotate_image(getInPutFiles(), getOutPutFile());
+        }
+    }
+
+    void ImageOperation::doOperation(){
+        auto keyOfOperation = getCacheManager().searchCache(getHash(), false);
+        auto operationAlreadyInCache = getCacheManager().addOperation(getHash(), getOutPutFile());
+        if(!operationAlreadyInCache){
+                writeToOutPutFileTheResultOperation();
+        }
     }
 }

@@ -31,11 +31,12 @@ namespace CacheManager{
         void clearCache();
 
         /**
-         * @brief The function add operation to cache and create out put file with data operation.
+         * @brief The function add operation to cache and create out put file with data operation if operation already in the cache.
          * 
          * @param operation - operation to add to cache.
+         * @return bool - the operation already in the cache and the function copy the data of the output file in the cache to the new output file.
          */
-        void addOperation( std::string hash, std::string outPutFile);
+        bool addOperation( std::string hash, std::string outPutFile);
 
         /**
          * @brief The function check if the operation exist in the cache.

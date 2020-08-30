@@ -78,7 +78,8 @@ namespace CacheManager{
     } 
 
 
-    void CacheManager::addOperation(std::string hash, std::string outPutFile){
+    bool CacheManager::addOperation(std::string hash, std::string outPutFile){
+            auto operationInCache = false;
             std::ofstream outFile(outPutFile, std::ios::out | std::ios::trunc);
             if(!outFile.is_open()){
                 outFile.close();
@@ -88,6 +89,7 @@ namespace CacheManager{
             auto keyOfValue = searchCache(hash, false);
             //the value in cache
             if(keyOfValue != OPERATION_NOT_FOUND){
+                operationInCache = true;
                 std::string dataFileName = m_cache[keyOfValue].substr(0, m_cache[keyOfValue].find(' '));
                 if(dataFileName != outPutFile){
                     std::ifstream inFile(dataFileName, std::ios::in);
@@ -127,5 +129,6 @@ namespace CacheManager{
                 }
                 outFile.close();
             }
+            return operationInCache;
     }
 }
