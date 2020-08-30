@@ -6,6 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
+extern "C" {
+#include "crc32.h"
+}
 #define OPERATION_NOT_FOUND -1
 
 namespace Operation{
@@ -88,7 +91,7 @@ namespace Operation{
     ImageOperation::ImageOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager)
     : AbstractOperation::AbstractOperation(operation, inputFiles, outputFile, cacheManager){
         checkParameters();
-    };
+    }
 
 
     void ImageOperation::checkParameters() const{
@@ -113,10 +116,36 @@ namespace Operation{
     }
 
     void ImageOperation::doOperation(){
-        auto keyOfOperation = getCacheManager().searchCache(getHash(), false);
         auto operationAlreadyInCache = getCacheManager().addOperation(getHash(), getOutPutFile());
         if(!operationAlreadyInCache){
                 writeToOutPutFileTheResultOperation();
         }
+    }
+
+    HashOperation::HashOperation(const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager)
+    : AbstractOperation::AbstractOperation(operation, inputFiles, outputFile, cacheManager){
+        checkParameters();
+    }
+
+    void HashOperation::checkParameters() const{
+        if(getOperation() != "algorithm"){
+            //throw exception!
+        }
+    }
+
+    const std::string HashOperation::getHash() const{
+        std::hash<std::string> stringHashFunction;
+        //std::string 
+        //const char* a = readFileContent("data/hash.bin").c_str();
+        std::string hashOfOperation = std::to_string(stringHashFunction(getOperation()));
+        return hashOfOperation;
+    }
+
+    void HashOperation::doOperation(){
+
+    }
+
+    void HashOperation::writeToOutPutFileTheResultOperation() const{
+
     }
 }
