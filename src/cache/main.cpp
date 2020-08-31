@@ -1,10 +1,6 @@
 
 #include "Operations.hpp"
-extern "C" {
-#include "crc32.h"
-}
 #include <stdint.h>
-#include <system_error>
 #include <iostream>
 #include <memory>
 #define MAX_NUMBER_OF_CACHE_DATA 5

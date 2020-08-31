@@ -1,13 +1,13 @@
-#include "ClassMatrix.hpp"
+#include "../matrix/ClassMatrix.hpp"
 #include "Operations.hpp"
 #include "CacheManager.hpp"
-#include "file_reading.hpp"
-#include "bmp/bmp_tester.hpp"
+#include "../file_reading.hpp"
+#include "../bmp/bmp_tester.hpp"
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
 extern "C" {
-#include "crc32.h"
+#include "../crc32/crc32.h"
 }
 #define OPERATION_NOT_FOUND -1
 
