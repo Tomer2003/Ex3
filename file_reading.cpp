@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <string>
 #include "file_reading.hpp"
@@ -10,7 +11,7 @@ std::string readFileContent(const std::string& filePath) {
   // The file is in a bad state. The error can be retrieved
   //	using the global `errno` in linux (#include <cerrno>).
   if (!inFile.is_open()) {
-    // exception
+    std::cerr << "Error: Fail open file for reading!" << std::endl;
   }
 
   // Read the file to a vector. This is not the most effecient

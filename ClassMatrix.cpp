@@ -90,8 +90,9 @@ namespace matrix{
 
     Matrix Matrix::getMatrixFromFile(std::string fileName){
         std::ifstream inFile(fileName, std::ios::in);
-        if(!inFile){
-            //throw exception
+        if(!inFile.is_open()){
+            std::cerr << "Error: Fail to open file for reading!" << std::endl;
+            exit(1);
         }
         auto content = std::string{std::istreambuf_iterator<char>{inFile},
                                 std::istreambuf_iterator<char>{}};

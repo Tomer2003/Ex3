@@ -2,6 +2,7 @@
 #include "CacheManager.hpp"
 #include "AbstractOperation.hpp"
 #include <string>
+#include <memory>
 
 namespace Operation {
 	class MatrixOperation : public AbstractOperation::AbstractOperation {
@@ -136,11 +137,22 @@ namespace Operation {
 		virtual void writeToOutPutFileTheResultOperation() const;
 
 		/**
-		 * @brief The function return the string result of operation
-		 *
+		 * @brief The function return the String Of The Result Operation object
+		 * 
 		 * @return const std::string - string result of operation
 		 */
 		const std::string getStringOfTheResultOperation() const;
 	};
 
+	/**
+	* @brief The function return the appopriate operation in shared pointer
+	* 
+	* @param option - option of operation
+	* @param operation - operation
+	* @param inputFiles - input files of operation
+	* @param outputFile - output file
+	* @param cacheManager - cache manager object
+	* @return std::shared_ptr<AbstractOperation::AbstractOperation> - shared pointer of operation 
+	*/
+	std::shared_ptr<AbstractOperation::AbstractOperation> operationFactory(const std::string& option, const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager);
 }

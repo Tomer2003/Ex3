@@ -1,22 +1,67 @@
-#include <iostream>
-//#include "Operations.hpp"
+
+#include "Operations.hpp"
 extern "C" {
 #include "crc32.h"
 }
 #include <stdint.h>
-#include "file_reading.hpp"
+#include <system_error>
+#include <iostream>
+#include <memory>
+#define MAX_NUMBER_OF_CACHE_DATA 5
 
-int main(){
-  // unsigned char arr[10] = {'1', '2', '3', '4','5' ,'6', '7', '8', '9'};
- // std::cout << arr << std::endl;
-
-  //const char* a = readFileContent("data/hash.bin").c_str();
-   
-   // const char* a = "123456789";
-  const unsigned char* t = reinterpret_cast<const unsigned char *>(readFileContent("data/hash.bin").c_str());
+int main(int argc, char** argv){
     
-    uint32_t hash = calculate_crc32c(0, t, 9);
-    std::cout << hash << std::endl;
-
+    CacheManager::CacheManager cacheManager(MAX_NUMBER_OF_CACHE_DATA);
+    if(argc < 3){
+      std::cerr << "Error: Wrong arguments!" << std::endl;
+      exit(1);
+    }
+    std::string option = std::string{argv[1]}, operation, inPutFiles, outPutFile;
+    if(option == "cache"){
+      if(std::string{argv[2]} == "clear"){
+        cacheManager.clearCache();
+        cacheManager.setDataToFileFromMap();
+      }
+      else if(std::string{argv[2]} == "search"){
+        if(std::string{argv[3]} == "matrix"){
+          if(argc != 7){
+            std::cerr << "Error: Wrong arguments!" << std::endl;
+            exit(1);
+          }
+          Operation::MatrixOperation matrixOperation(std::string{argv[4]}, std::string{argv[5]} + " " + std::string{argv[6]}, "", cacheManager);
+          cacheManager.searchCache(matrixOperation.getHash(), true);
+        }
+        else{
+          if(argc != 6){
+            std::cerr << "Error: Wrong arguments!" << std::endl;
+            exit(1);
+          }
+          std::shared_ptr<AbstractOperation::AbstractOperation> operationPtr = Operation::operationFactory(std::string{argv[3]}, std::string{argv[4]}, std::string{argv[5]}, "", cacheManager);
+          cacheManager.searchCache(operationPtr->getHash(), true);
+        }
+      }
+    }
+    else{
+      operation = std::string{argv[2]};
+      if(std::string{argv[1]} == "matrix"){
+        if(argc != 6){
+          std::cerr << "Error: Wrong arguments!" << std::endl;
+          exit(1);
+        }
+        inPutFiles = std::string{argv[3]} + " " + std::string{argv[4]};
+        outPutFile = std::string{argv[5]};
+      }
+      else{
+        if(argc != 5){
+          std::cerr << "Error: Wrong arguments!" << std::endl;
+          exit(1);
+        }
+        inPutFiles = std::string{argv[3]};
+        outPutFile = std::string{argv[4]};
+      }
+      std::shared_ptr<AbstractOperation::AbstractOperation> operationPtr = Operation::operationFactory(option, operation, inPutFiles, outPutFile, cacheManager);
+      operationPtr->doOperation();
+      cacheManager.setDataToFileFromMap();
+    }
     return 0;
 }

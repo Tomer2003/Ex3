@@ -19,32 +19,28 @@ namespace CacheManager{
 
     void CacheManager::setDataToMapFromFile(){
         std::ifstream inFile(m_cacheFile);
-        if(!inFile.is_open()){
+        if(inFile.is_open()){
+            auto lineNumber = 0;
+            std::string line;
+            while (std::getline(inFile, line))
+            {
+            m_cache.insert({lineNumber, line});
+            ++lineNumber;
+            }
             inFile.close();
-            //throw exception!
-            std::cout << "cant open file for reading data from cache result!" << std::endl;
         }
-        auto lineNumber = 0;
-        std::string line;
-        while (std::getline(inFile, line))
-        {
-           m_cache.insert({lineNumber, line});
-           ++lineNumber;
-        }
-        inFile.close();
     }
 
     const std::string CacheManager::getOutPutFileOfKey(unsigned int key){
-        return m_cache[key].substr( m_cache[key].find(' ') + 1, m_cache[key].size() -  m_cache[key].find(' ') - 1);
+        return m_cache[key].substr( 0, m_cache[key].find(' '));
     }
 
 
     void CacheManager::setDataToFileFromMap(){
         std::ofstream outFile(m_cacheFile, std::ios::out | std::ios::trunc);
         if(!outFile.is_open()){
-            outFile.close();
-            //throw exception!
-            std::cout << "cant open file for writing data to cache result!" << std::endl;
+            std::cerr << "Error: Fail to open cache file for writing!" << std::endl;
+            exit(1);
         }
         for (auto const& pair : m_cache){
            outFile << pair.second << std::endl;
@@ -82,9 +78,8 @@ namespace CacheManager{
             auto operationInCache = false;
             std::ofstream outFile(outPutFile, std::ios::out | std::ios::trunc);
             if(!outFile.is_open()){
-                outFile.close();
-                //trow exception!
-                std::cout << "cant open file for writing data!" << std::endl;
+                std::cerr << "Error: Fail to open output file for writing!" << std::endl;
+                exit(1);
             }
             auto keyOfValue = searchCache(hash, false);
             //the value in cache
@@ -94,8 +89,9 @@ namespace CacheManager{
                 if(dataFileName != outPutFile){
                     std::ifstream inFile(dataFileName, std::ios::in);
                     if(!inFile.is_open()){
-                        inFile.close();
-                    std::cout << "cant open file for reading data!" << std::endl;
+                        outFile.close();
+                        std::cerr << "Error: Fail to open data file of operation for reading!" << std::endl;
+                        exit(1);
                     }
                     auto content = std::string{std::istreambuf_iterator<char>{inFile},
                                     std::istreambuf_iterator<char>{}};

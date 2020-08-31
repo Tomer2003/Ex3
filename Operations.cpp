@@ -22,18 +22,19 @@ namespace Operation{
 
     void MatrixOperation::checkParameters() const{
         if(getOperation() != "add" && getOperation() != "multiply"){
-            //trow operation invalid exception
-            std::cout << "not appopriate operatoin1" << std::endl;
+            std::cerr << "Error: Wrong Operation!" << std::endl;
+            exit(1);
         }
         if (getInPutFiles().find(' ') == std::string::npos) {
-		    //throw error not enogh input files
-            std::cout << "not 2 files" << std::endl;
+		    std::cerr << "Error: Wrong arguments!" << std::endl;
+            exit(1);
 	    }
     }
 
     const std::string MatrixOperation::getHash() const{
-        std::hash<std::string> stringHashFunction;
-        std::string hashOfOperation = std::to_string(stringHashFunction(matrix::Matrix::getMatrixFromFile(m_firstInPutFile).getStringOfMatrix() + getOperation() + matrix::Matrix::getMatrixFromFile(m_secondInPutFile).getStringOfMatrix()));
+        std::string stringOperation = matrix::Matrix::getMatrixFromFile(m_firstInPutFile).getStringOfMatrix() + getOperation() + matrix::Matrix::getMatrixFromFile(m_secondInPutFile).getStringOfMatrix();
+        const unsigned char* unsignedStringOperation = reinterpret_cast<const unsigned char *>(stringOperation.c_str());
+        std::string hashOfOperation = std::to_string(calculate_crc32c(0, unsignedStringOperation, stringOperation.size()));
         return hashOfOperation;
     }
 
@@ -55,9 +56,8 @@ namespace Operation{
     void MatrixOperation::writeToOutPutFileTheResultOperation() const{
         std::ofstream outFile(getOutPutFile(), std::ios::out);
         if(!outFile.is_open()){
-            outFile.close();
-            //throw exception!
-            std::cout << "cant open file for writing result!" << std::endl;
+            std::cerr << "Error: Fail to open output file for writing!" << std::endl;
+            exit(1);
         }
         outFile << getStringOfTheResultOperation();
         outFile.close();
@@ -96,13 +96,15 @@ namespace Operation{
 
     void ImageOperation::checkParameters() const{
         if(getOperation() != "convert" && getOperation() != "rotate"){
-            //throw exception false operation name
+            std::cerr << "Error: Wrong Operation!" << std::endl;
+            exit(1);
         }
     }
 
     const std::string ImageOperation::getHash() const{
-        std::hash<std::string> stringHashFunction;
-        std::string hashOfOperation = std::to_string(stringHashFunction(readFileContent(getInPutFiles()) + getOperation()));
+        std::string stringOperation = readFileContent(getInPutFiles()) + getOperation();
+        const unsigned char* unsignedStringOperation = reinterpret_cast<const unsigned char *>(stringOperation.c_str());
+        std::string hashOfOperation = std::to_string(calculate_crc32c(0, unsignedStringOperation, stringOperation.size()));
         return hashOfOperation;
     }
 
@@ -128,15 +130,16 @@ namespace Operation{
     }
 
     void HashOperation::checkParameters() const{
-        if(getOperation() != "algorithm"){
-            //throw exception!
+        if(getOperation() != "crc32"){
+            std::cerr << "Error: Wrong Operation!" << std::endl;
+            exit(1);
         }
     }
 
     const std::string HashOperation::getHash() const{
-        std::hash<std::string> stringHashFunction;
-        std::string stringToHash = readFileContent(getInPutFiles());
-        std::string hashOfOperation = std::to_string(stringHashFunction(stringToHash + getOperation()));
+        std::string stringOperation = readFileContent(getInPutFiles()) + getOperation();
+        const unsigned char* unsignedStringOperation = reinterpret_cast<const unsigned char *>(stringOperation.c_str());
+        std::string hashOfOperation = std::to_string(calculate_crc32c(0, unsignedStringOperation, stringOperation.size()));
         return hashOfOperation;
     }
 
@@ -154,11 +157,11 @@ namespace Operation{
             //operation found in cache
             if(keyOfOperation != OPERATION_NOT_FOUND){
                 std::string outPutFileOperation = getCacheManager().getOutPutFileOfKey(keyOfOperation);
-                std::cout << outPutFileOperation;
+                std::cout << outPutFileOperation << std::endl;
             }
             //operation not found in cache
             else{
-                std::cout << getStringOfTheResultOperation();
+                std::cout << getStringOfTheResultOperation() << std::endl;
             }
         }
         //save result in cache
@@ -173,11 +176,28 @@ namespace Operation{
     void HashOperation::writeToOutPutFileTheResultOperation() const{
          std::ofstream outFile(getOutPutFile(), std::ios::out);
         if(!outFile.is_open()){
-            outFile.close();
-            //throw exception!
-            std::cout << "cant open file for writing result!" << std::endl;
+            std::cerr << "Error: Fail to open output file for writing!" << std::endl;
+            exit(1);
         }
         outFile << getStringOfTheResultOperation();
         outFile.close();
+    }
+
+    std::shared_ptr<AbstractOperation::AbstractOperation> operationFactory(const std::string& option, const std::string& operation, const std::string inputFiles, const std::string outputFile, CacheManager::CacheManager& cacheManager){
+        std::shared_ptr<AbstractOperation::AbstractOperation> abstractOperationPtr;
+        if(option == "matrix"){
+            abstractOperationPtr = std::make_shared<Operation::MatrixOperation>(Operation::MatrixOperation(operation, inputFiles, outputFile, cacheManager));
+        }
+        else if(option == "image"){
+            abstractOperationPtr = std::make_shared<Operation::ImageOperation>(Operation::ImageOperation(operation, inputFiles, outputFile, cacheManager));
+        }
+        else if(option == "hash"){
+            abstractOperationPtr = std::make_shared<Operation::HashOperation>(Operation::HashOperation(operation, inputFiles, outputFile, cacheManager));
+        }
+        else{
+            std::cerr << "Error: The option does not exist!" << std::endl;
+            exit(1);
+        }
+        return abstractOperationPtr;
     }
 }
