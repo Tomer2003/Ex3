@@ -135,17 +135,49 @@ namespace Operation{
 
     const std::string HashOperation::getHash() const{
         std::hash<std::string> stringHashFunction;
-        //std::string 
-        //const char* a = readFileContent("data/hash.bin").c_str();
-        std::string hashOfOperation = std::to_string(stringHashFunction(getOperation()));
+        std::string stringToHash = readFileContent(getInPutFiles());
+        std::string hashOfOperation = std::to_string(stringHashFunction(stringToHash + getOperation()));
         return hashOfOperation;
     }
 
-    void HashOperation::doOperation(){
+    const std::string HashOperation::getStringOfTheResultOperation() const{
+        std::string stringToDoHash = readFileContent(getInPutFiles());
+        const unsigned char* charsOfHash = reinterpret_cast<const unsigned char *>(stringToDoHash.c_str());
+        uint32_t hash = calculate_crc32c(0, charsOfHash, stringToDoHash.size());
+        return std::to_string(hash);
+    }
 
+    void HashOperation::doOperation(){
+         auto keyOfOperation = getCacheManager().searchCache(getHash(), false);
+        //print the reult operation
+        if(getOutPutFile() == "stdout"){
+            //operation found in cache
+            if(keyOfOperation != OPERATION_NOT_FOUND){
+                std::string outPutFileOperation = getCacheManager().getOutPutFileOfKey(keyOfOperation);
+                std::cout << outPutFileOperation;
+            }
+            //operation not found in cache
+            else{
+                std::cout << getStringOfTheResultOperation();
+            }
+        }
+        //save result in cache
+        else{
+            auto operationAlreadyInCache = getCacheManager().addOperation(getHash(), getOutPutFile());
+             if(!operationAlreadyInCache){
+                writeToOutPutFileTheResultOperation();
+            }
+        }       
     }
 
     void HashOperation::writeToOutPutFileTheResultOperation() const{
-
+         std::ofstream outFile(getOutPutFile(), std::ios::out);
+        if(!outFile.is_open()){
+            outFile.close();
+            //throw exception!
+            std::cout << "cant open file for writing result!" << std::endl;
+        }
+        outFile << getStringOfTheResultOperation();
+        outFile.close();
     }
 }
