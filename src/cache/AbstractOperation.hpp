@@ -11,10 +11,9 @@ namespace AbstractOperation{
         std::string m_operation;
         std::string m_inPutFiles;
         std::string m_outPutFile; 
-
+        CacheManager::CacheManager& m_cacheManager;
 
     public:
-        CacheManager::CacheManager& m_cacheManager;
             /**
              * @brief Construct a new Abstract Operation object
              * 

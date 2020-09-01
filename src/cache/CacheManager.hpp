@@ -8,8 +8,8 @@ namespace CacheManager{
     private:
         const std::string m_cacheFile;
         const unsigned int m_cacheSize;
-    public:
         std::map<unsigned int, std::string> m_cache;
+    public:
         /**
          * @brief Construct of a new Cache Manager object
          * 
@@ -17,12 +17,6 @@ namespace CacheManager{
          */
         CacheManager(const unsigned int cacheSize);
 
-        /**
-         * @brief Copy Constructor of a new Cache Manager object
-         * 
-         * @param cacheManager - cacheManager to copy
-         */
-       // CacheManager(const CacheManager& cacheManager);
 
         /**
          * @brief The function clear all pairs in the cache.
