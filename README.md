@@ -13,7 +13,7 @@ Defines an abstract class of a specific action that confers polymorphism.
 2. input files for operation
 3. output path
 4. CacheManager object
-abstract methods:
+- abstract methods:
 1. function that return the hash of operation.
 2. function that do the appopriate operation. 
 3. function that check the given parameters of operation.
