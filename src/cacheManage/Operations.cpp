@@ -67,7 +67,7 @@ namespace Operation{
     void MatrixOperation::doOperation(){
         auto keyOfOperation = getCacheManager().searchCache(getHash(), false);
         //print the reult operation
-        if(getOutPutFile() == "stdout"){
+        if(getOutPutFile() == "cache/stdout"){
             //operation found in cache
             if(keyOfOperation != OPERATION_NOT_FOUND){
                 std::string outPutFileOperation = getCacheManager().getOutPutFileOfKey(keyOfOperation);
@@ -153,11 +153,11 @@ namespace Operation{
     void HashOperation::doOperation(){
          auto keyOfOperation = getCacheManager().searchCache(getHash(), false);
         //print the reult operation
-        if(getOutPutFile() == "stdout"){
+        if(getOutPutFile() == "cache/stdout"){
             //operation found in cache
             if(keyOfOperation != OPERATION_NOT_FOUND){
                 std::string outPutFileOperation = getCacheManager().getOutPutFileOfKey(keyOfOperation);
-                std::cout << outPutFileOperation << std::endl;
+                std::cout << readFileContent(outPutFileOperation) << std::endl;
             }
             //operation not found in cache
             else{
