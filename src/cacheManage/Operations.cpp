@@ -54,7 +54,7 @@ namespace Operation{
     }
 
     void MatrixOperation::writeToOutPutFileTheResultOperation() const{
-        std::ofstream outFile("cache/" + getOutPutFile(), std::ios::out);
+        std::ofstream outFile(getOutPutFile(), std::ios::out);
         if(!outFile.is_open()){
             std::cerr << "Error: Fail to open output file for writing!" << std::endl;
             exit(1);
@@ -110,10 +110,10 @@ namespace Operation{
 
     void ImageOperation::writeToOutPutFileTheResultOperation() const{
         if(getOperation() == "convert"){
-            bmpOperations::convert_to_grayscale(getInPutFiles(), "cache/" + getOutPutFile());
+            bmpOperations::convert_to_grayscale(getInPutFiles(), getOutPutFile());
         }
         else{
-            bmpOperations::rotate_image(getInPutFiles(), "cache/" + getOutPutFile());
+            bmpOperations::rotate_image(getInPutFiles(), getOutPutFile());
         }
     }
 
@@ -174,7 +174,7 @@ namespace Operation{
     }
 
     void HashOperation::writeToOutPutFileTheResultOperation() const{
-         std::ofstream outFile("cache/" + getOutPutFile(), std::ios::out);
+         std::ofstream outFile(getOutPutFile(), std::ios::out);
         if(!outFile.is_open()){
             std::cerr << "Error: Fail to open output file for writing!" << std::endl;
             exit(1);
