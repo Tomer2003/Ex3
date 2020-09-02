@@ -113,7 +113,18 @@ namespace CacheManager{
             //the value not in cache
             else{
                 //over values(need to remove a value)
-                if(m_cache.size() > m_cacheSize - 1){
+
+                //remove the pair with the same output file name
+                bool earased = false;
+                for (auto const& pair : m_cache){
+                   if(pair.second.substr( 0, pair.second.find(' ')) == outPutFile){
+                       m_cache.erase(pair.first);
+                       earased = true;
+                   }
+                }
+
+                //otherwise remove the last pair that enet to the cache
+                if(!earased && m_cache.size() > m_cacheSize - 1){
                     m_cache.erase(m_cache.begin()->first);
                 }
 
