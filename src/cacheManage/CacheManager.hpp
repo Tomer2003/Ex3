@@ -1,0 +1,64 @@
+#pragma once
+#include <string>
+#include <map> 
+
+
+namespace CacheManager{
+    class CacheManager{
+    private:
+        const std::string m_cacheFile;
+        const unsigned int m_cacheSize;
+        std::map<unsigned int, std::string> m_cache;
+    public:
+        /**
+         * @brief Construct of a new Cache Manager object
+         * 
+         * @param cacheSize - size of cache
+         */
+        CacheManager(const unsigned int cacheSize);
+
+
+        /**
+         * @brief The function clear all pairs in the cache.
+         * 
+         */
+        void clearCache();
+
+        /**
+         * @brief The function add operation to cache and create out put file with data operation if operation already in the cache.
+         * 
+         * @param operation - operation to add to cache.
+         * @return bool - the operation already in the cache and the function copy the data of the output file in the cache to the new output file.
+         */
+        bool addOperation( std::string hash, std::string outPutFile);
+
+        /**
+         * @brief The function check if the operation exist in the cache.
+         * 
+         * @param operation - operation to check if exist in the cache.
+         * @return int - return -1 if does not exist and return the key if exist.
+         */
+        int searchCache(std::string hash, bool printResult);
+
+        /**
+         * @brief The function set data to map from cache file.
+         * 
+         */
+        void setDataToMapFromFile();
+
+        /**
+         * @brief The function write data to cache file from map.
+         * 
+         */
+        void setDataToFileFromMap();
+
+        /**
+         * @brief The function return outputfile of key
+         * 
+         * @param key - key to get output file
+         * @return std::string - output file
+         */
+        const std::string getOutPutFileOfKey(unsigned int key);
+    }; 
+} 
+
