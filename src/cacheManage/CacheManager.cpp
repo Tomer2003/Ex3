@@ -120,6 +120,7 @@ namespace CacheManager{
                    if(pair.second.substr( 0, pair.second.find(' ')) == outPutFile){
                        m_cache.erase(pair.first);
                        earased = true;
+                       break;
                    }
                 }
 
