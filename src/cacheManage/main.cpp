@@ -55,7 +55,7 @@ int main(int argc, char** argv){
         inPutFiles = std::string{argv[3]};
         outPutFile = std::string{argv[4]};
       }
-      std::shared_ptr<AbstractOperation::AbstractOperation> operationPtr = Operation::operationFactory(option, operation, inPutFiles, outPutFile, cacheManager);
+      std::shared_ptr<AbstractOperation::AbstractOperation> operationPtr = Operation::operationFactory(option, operation, inPutFiles, "cache/" + outPutFile, cacheManager);
       operationPtr->doOperation();
       cacheManager.setDataToFileFromMap();
     }
