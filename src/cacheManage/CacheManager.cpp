@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iterator>
 #define OPERATION_NOT_FOUND -1
-#define CACHE_FILE_NAME "cacheFile.txt"
+#define CACHE_FILE_NAME "cache/cacheFile.txt"
 
 
 namespace CacheManager{
